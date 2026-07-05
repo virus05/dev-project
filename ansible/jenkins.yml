@@ -1,0 +1,56 @@
+- hosts: jenkins
+  become: yes
+  tasks:
+    - name: Update apt
+      apt:
+        update_cache: yes
+
+    - name: Install Java + Docker
+      apt:
+        name:
+          - openjdk-11-jre
+          - docker.io
+        state: present
+
+    - name: Add ubuntu to docker group
+      user:
+        name: ubuntu
+        groups: docker
+        append: yes
+
+    - name: Download Jenkins WAR
+      get_url:
+        url: https://get.jenkins.io/war-stable/latest/jenkins.war
+        dest: /opt/jenkins.war
+        mode: '0755'
+
+    - name: Create Jenkins systemd service
+      copy:
+        dest: /etc/systemd/system/jenkins.service
+        content: |
+          [Unit]
+          Description=Jenkins Server
+          After=network.target
+
+          [Service]
+          ExecStart=/usr/bin/java -jar /opt/jenkins.war
+          Restart=always
+          User=ubuntu
+
+          [Install]
+          WantedBy=multi-user.target
+
+    - name: Reload systemd
+      command: systemctl daemon-reload
+
+    - name: Start Jenkins
+      service:
+        name: jenkins
+        state: started
+        enabled: yes
+
+    - name: Install kubectl
+      get_url:
+        url: https://dl.k8s.io/release/v1.29.0/bin/linux/amd64/kubectl
+        dest: /usr/local/bin/kubectl
+        mode: '0755'

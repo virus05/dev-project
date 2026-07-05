@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Zebra GX420t Label Generator</title>
+  <style>
+    @page { 
+      size: 38mm 15mm; 
+      margin: 0;
+    }
+
+    body { 
+      font-family: Arial, sans-serif; 
+      font-size: 24pt;
+      margin: 0;
+      padding: 0;
+    }
+
+    .sheet {
+      
+      grid-template-columns: 38mm;
+      grid-auto-rows: 15mm;
+      
+    }
+
+    .label {
+      width: 38mm;
+      height: 15mm;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      box-sizing: border-box;
+      /* border: 0.2pt solid #ccc;  enable for alignment testing */
+    }
+
+    @media print {
+      #settings, #printBtn { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="settings">
+    <h3>Label Settings</h3>
+    <label>Prefix 1: <input id="p1" value="2"></label><br>
+    <label>Prefix 2: <input id="p2" value="GF"></label><br>
+    <label>Start number: <input id="start" value="1"></label><br>
+    <label>End number: <input id="end" value="1000"></label><br><br>
+    <button onclick="generate()">Generate Labels</button>
+    <button id="printBtn" onclick="window.print()">Print</button>
+  </div>
+
+  <div class="sheet" id="sheet"></div>
+
+  <script>
+    function generate() {
+      const sheet = document.getElementById('sheet');
+      sheet.innerHTML = "";
+
+      const p1 = document.getElementById('p1').value;
+      const p2 = document.getElementById('p2').value;
+      const start = parseInt(document.getElementById('start').value);
+      const end = parseInt(document.getElementById('end').value);
+
+      for (let i = start; i <= end; i++) {
+        const label = document.createElement('div');
+        label.className = 'label';
+
+        const num = String(i).padStart(3, '0');
+        label.textContent = `${p1} ${p2} ${num}`;
+
+        sheet.appendChild(label);
+      }
+    }
+
+    generate();
+  </script>
+
+</body>
+</html>

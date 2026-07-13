@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: label-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: label-app
+  template:
+    metadata:
+      labels:
+        app: label-app
+    spec:
+      containers:
+        - name: label-app
+          image: eugenchi/label-app:latest
+          ports:
+            - containerPort: 80

@@ -9,6 +9,7 @@ pipeline {
     }
 
     stages {
+
         stage('Checkout') {
             steps {
                 git 'https://github.com/virus05/dev-project.git'
@@ -24,7 +25,7 @@ pipeline {
                   echo "Test 2: title present"
                   grep -q "<title>Zebra GX420t Label Generator</title>" app/index.html
 
-                  echo "Test 3: basic HTML validity (no empty body)"
+                  echo "Test 3: basic HTML validity"
                   grep -q "<body>" app/index.html
                 '''
             }
@@ -57,12 +58,12 @@ pipeline {
                 sshagent(['k3s-ssh']) {
                     sh '''
                       ssh -o StrictHostKeyChecking=no $K3S_USER@$K3S_HOST \
-                        "sudo k3s kubectl set image deployment/label-app label-app=$DOCKER_IMAGE:$DOCKER_TAG || \
-                         sudo k3s kubectl apply -f ~/k8s/app-deployment.yaml && \
-                         sudo k3s kubectl apply -f ~/k8s/app-service.yaml"
+                        "sudo k3s kubectl set image deployment/label-app label-app=$DOCKER_IMAGE:$DOCKER_TAG --record && \
+                         sudo k3s kubectl rollout restart deployment/label-app"
                     '''
                 }
             }
         }
     }
 }
+

@@ -22,7 +22,7 @@ pipeline {
                   test -f app/index.html
 
                   echo "Test 2: title present"
-                  grep -q "<title>1Zebra GX420t Label Generator</tityle>" app/index.html
+                  grep -q "<title>Zebra GX420t Label Generator</tityle>" app/index.html
 
                   echo "Test 3: basic HTML validity (no empty body)"
                   grep -q "<body>" app/index.html

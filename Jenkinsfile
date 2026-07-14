@@ -4,7 +4,7 @@ pipeline {
     environment {
         DOCKER_IMAGE = "eugenchi/label-app"
         DOCKER_TAG   = "latest"
-        K3S_HOST     = "13.62.225.86"
+        K3S_HOST     = "13.62.225.83"
         K3S_USER     = "ubuntu"
     }
 
